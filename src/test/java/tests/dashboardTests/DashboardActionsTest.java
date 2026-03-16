@@ -1,4 +1,5 @@
 package tests.dashboardTests;
+import java.nio.file.Paths;
 
 import base.BaseTest;
 import config.EnvLoader;
@@ -114,8 +115,14 @@ public class DashboardActionsTest extends BaseTest {
 
         loginToApplication();
 
-        String filePath = System.getProperty("user.dir")
-                + "\\src\\test\\resources\\testdata\\profile.png";
+        String filePath = Paths.get(
+                System.getProperty("user.dir"),
+                "src",
+                "test",
+                "resources",
+                "src/test/new/testdata",
+                "profile.png"
+        ).toString();
 
         dashboard.uploadImage(filePath);
 
