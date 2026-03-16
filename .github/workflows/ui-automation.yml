@@ -1,0 +1,170 @@
+name: UI Automation
+
+on:
+  schedule:
+    - cron: '30 10 * * *'   # 4 PM IST
+  workflow_dispatch:
+
+jobs:
+
+  run-ui-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Automation Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Verify Maven
+        run: mvn -version
+
+
+      # =========================
+      # Clone API Project
+      # =========================
+
+      - name: Clone API Repository
+        run: |
+          git clone https://github.com/Ruturaj0861/user-api.git
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install API Dependencies
+        run: |
+          cd user-api
+          npm install
+
+      - name: Start API Server
+        run: |
+          cd user-api
+          nohup node server.js &
+          sleep 5
+
+
+      # =========================
+      # Wait for API
+      # =========================
+
+      - name: Wait for API to Start
+        run: |
+          echo "Checking API..."
+          for i in {1..30}; do
+            if curl -s http://localhost:3000/api/users/count > /dev/null; then
+              echo "API running"
+              exit 0
+            fi
+            echo "Waiting API..."
+            sleep 5
+          done
+          echo "API failed"
+          exit 1
+
+
+      # =========================
+      # Clone UI
+      # =========================
+
+      - name: Clone UI Repository
+        run: |
+          git clone https://github.com/Ruturaj0861/user-ui.git
+
+
+      - name: Install UI Dependencies
+        run: |
+          cd user-ui
+          npm install
+
+
+      - name: Start UI
+        run: |
+          cd user-ui
+          nohup npm run dev &
+          sleep 10
+
+
+      # =========================
+      # Wait for UI
+      # =========================
+
+      - name: Wait for UI to Start
+        run: |
+          echo "Checking UI..."
+          for i in {1..30}; do
+            if curl -s http://localhost:5173 > /dev/null; then
+              echo "UI running"
+              exit 0
+            fi
+            echo "Waiting UI..."
+            sleep 5
+          done
+          echo "UI failed"
+          exit 1
+
+
+      # =========================
+      # Run Automation
+      # =========================
+
+      - name: Run UI Automation Tests
+        run: mvn clean test
+
+
+      # =========================
+      # Generate Allure Report
+      # =========================
+
+      - name: Generate Allure Report
+        run: |
+          if [ -d "target/allure-results" ]; then
+            mvn allure:report
+          else
+            echo "No Allure results"
+          fi
+
+
+      # =========================
+      # Publish Report
+      # =========================
+
+      - name: Deploy Allure Report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/allure-maven-plugin
+          publish_branch: gh-pages
+
+
+      # =========================
+      # Send Email
+      # =========================
+
+      - name: Send Email Report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: 🚀 UI Automation Test Execution - SUCCESS
+          to: ruturaj.ppr24@gmail.com
+          from: "QA Automation CI Bot <noreply@automation-ci.local>"
+          html_body: |
+            <h2>UI Automation Execution Completed</h2>
+
+            <p><b>Execution:</b> Daily Run - 4 PM IST</p>
+
+            <a href="https://ruturaj0861.github.io/user-admin-automation/">
+            Open Live Report
+            </a>
