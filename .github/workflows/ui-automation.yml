@@ -6,24 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-
   run-ui-tests:
 
     runs-on: ubuntu-latest
 
     steps:
 
-      # =========================
-      # Checkout Automation Repo
-      # =========================
-
+      # Checkout automation repo
       - name: Checkout Automation Repo
         uses: actions/checkout@v4
 
-      # =========================
-      # Setup Java
-      # =========================
 
+      # Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -31,103 +25,77 @@ jobs:
           java-version: 17
           cache: maven
 
+
       - name: Verify Maven
         run: mvn -version
 
 
-      # =========================
-      # Clone API Project
-      # =========================
-
-      - name: Clone API Repository
-        run: |
-          git clone https://github.com/Ruturaj0861/user-api.git
-
-
-      # =========================
-      # Setup Node (FIXED VERSION)
-      # =========================
-
+      # Setup Node (REQUIRED for Vite)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
 
 
-      # =========================
-      # Install API Dependencies
-      # =========================
+      # Clone API repo
+      - name: Clone API Repository
+        run: |
+          git clone https://github.com/Ruturaj0861/user-api.git
 
+
+      # Install API dependencies
       - name: Install API Dependencies
         run: |
           cd user-api
           npm install
 
 
-      # =========================
-      # Start API Server
-      # =========================
-
+      # Start API server
       - name: Start API Server
         run: |
           cd user-api
           nohup node server.js &
-          sleep 5
+          sleep 10
 
 
-      # =========================
       # Wait for API
-      # =========================
-
       - name: Wait for API to Start
         run: |
           echo "Checking API..."
           for i in {1..30}; do
             if curl -s http://localhost:3000/api/users/count > /dev/null; then
-              echo "API is running"
+              echo "API running"
               exit 0
             fi
-            echo "Waiting for API..."
+            echo "Waiting API..."
             sleep 5
           done
-          echo "API failed to start"
+          echo "API failed"
           exit 1
 
 
-      # =========================
-      # Clone UI Repository
-      # =========================
-
+      # Clone UI repo
       - name: Clone UI Repository
         run: |
           git clone https://github.com/Ruturaj0861/user-ui.git
 
 
-      # =========================
-      # Install UI Dependencies
-      # =========================
-
+      # Install UI dependencies
       - name: Install UI Dependencies
         run: |
           cd user-ui
           npm install
 
 
-      # =========================
-      # Start UI
-      # =========================
-
+      # Start UI server
       - name: Start UI Server
         run: |
           cd user-ui
-          nohup npm run dev &
-          sleep 10
+          nohup npm run dev > ui.log 2>&1 &
+          sleep 20
 
 
-      # =========================
       # Wait for UI
-      # =========================
-
       - name: Wait for UI to Start
         run: |
           echo "Checking UI..."
@@ -143,18 +111,20 @@ jobs:
           exit 1
 
 
-      # =========================
-      # Run Selenium Automation
-      # =========================
+      # Create .env for automation tests
+      - name: Create .env file
+        run: |
+          echo "BASE_URL=http://localhost:5173" >> .env
+          echo "BROWSER=chrome" >> .env
+          echo "TEST_PASSWORD=Password@123" >> .env
 
+
+      # Run Selenium tests
       - name: Run UI Automation Tests
         run: mvn clean test
 
 
-      # =========================
-      # Generate Allure Report
-      # =========================
-
+      # Generate Allure report
       - name: Generate Allure Report
         run: |
           if [ -d "target/allure-results" ]; then
@@ -164,10 +134,7 @@ jobs:
           fi
 
 
-      # =========================
-      # Deploy Report to GitHub Pages
-      # =========================
-
+      # Deploy report to GitHub Pages
       - name: Deploy Allure Report
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -176,10 +143,7 @@ jobs:
           publish_branch: gh-pages
 
 
-      # =========================
-      # Send Email Report
-      # =========================
-
+      # Send email report
       - name: Send Email Report
         uses: dawidd6/action-send-mail@v3
         with:
@@ -193,7 +157,6 @@ jobs:
           from: "QA Automation CI Bot <noreply@automation-ci.local>"
           html_body: |
             <div style="font-family:Arial;padding:20px;background:#f6f8fa">
-
             <h2 style="color:#2ea44f;">✅ UI Automation Testing Completed</h2>
 
             <p><b>Repository:</b> user-admin-automation</p>
