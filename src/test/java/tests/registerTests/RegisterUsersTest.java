@@ -2,6 +2,7 @@ package tests.registerTests;
 
 import base.BaseTest;
 import config.EnvLoader;
+import io.qameta.allure.*;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,12 +12,18 @@ import utils.RandomDataGenerator;
 
 import java.time.Duration;
 
+@Epic("User Admin Automation")
+@Feature("User Registration")
+@Owner("Ruturaj Darekar")
+
 public class RegisterUsersTest extends BaseTest {
 
     public static String savedEmail;
     public static String savedPassword;
 
     @Test
+    @Description("Verify registration of 5 users")
+    @Severity(SeverityLevel.CRITICAL)
     public void registerFiveUsers() {
 
         RegisterPage register = new RegisterPage(driver);

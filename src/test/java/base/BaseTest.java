@@ -1,5 +1,6 @@
 package base;
 
+import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -10,11 +11,13 @@ public class BaseTest {
 
     protected WebDriver driver;
 
-    @Parameters("browser")
     @BeforeMethod
+    @Parameters("browser")
     public void setup(String browser){
 
         driver = DriverManager.getDriver(browser);
+
+        Allure.parameter("Browser", browser);
 
     }
 
@@ -22,7 +25,9 @@ public class BaseTest {
     public void tearDown(){
 
         if(driver != null){
+
             driver.quit();
+
         }
 
     }

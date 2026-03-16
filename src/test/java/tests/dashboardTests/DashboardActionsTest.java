@@ -2,6 +2,7 @@ package tests.dashboardTests;
 
 import base.BaseTest;
 import config.EnvLoader;
+import io.qameta.allure.*;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,6 +12,10 @@ import pages.LoginPage;
 import tests.registerTests.RegisterUsersTest;
 
 import java.time.Duration;
+
+@Epic("User Admin Automation")
+@Feature("Dashboard Functionalities")
+@Owner("Ruturaj Darekar")
 
 public class DashboardActionsTest extends BaseTest {
 
@@ -49,59 +54,62 @@ public class DashboardActionsTest extends BaseTest {
     }
 
     @Test(priority = 1)
+    @Description("Verify search user functionality")
+    @Severity(SeverityLevel.NORMAL)
     public void searchUserTest() {
 
         loginToApplication();
-
         dashboard.searchUser("User");
 
     }
 
     @Test(priority = 2)
+    @Description("Verify update user functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void updateUserTest() {
 
         loginToApplication();
-
         dashboard.updateUser();
-
         handleAlert();
 
     }
 
     @Test(priority = 3)
+    @Description("Verify block user functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void blockUserTest() {
 
         loginToApplication();
-
         dashboard.blockUser();
-
         handleAlert();
 
     }
 
     @Test(priority = 4)
+    @Description("Verify activate user functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void activateUserTest() {
 
         loginToApplication();
-
         dashboard.activateUser();
-
         handleAlert();
 
     }
 
     @Test(priority = 5)
+    @Description("Verify reset password functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void resetPasswordTest() {
 
         loginToApplication();
-
         dashboard.resetPassword();
-
         handleAlert();
 
     }
 
     @Test(priority = 6)
+    @Description("Verify upload image functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void uploadImageTest() {
 
         loginToApplication();
@@ -114,21 +122,22 @@ public class DashboardActionsTest extends BaseTest {
     }
 
     @Test(priority = 7)
+    @Description("Verify logout functionality")
+    @Severity(SeverityLevel.NORMAL)
     public void logoutTest() {
 
         loginToApplication();
-
         dashboard.logout();
 
     }
 
     @Test(priority = 8)
+    @Description("Verify delete user functionality")
+    @Severity(SeverityLevel.CRITICAL)
     public void deleteUserTest() {
 
         loginToApplication();
-
         dashboard.deleteUser();
-
         handleAlert();
 
     }

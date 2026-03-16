@@ -1,63 +1,49 @@
 package utils;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 import org.openqa.selenium.WebDriver;
-
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverManager {
 
-    public static WebDriver getDriver(String browser){
+    public static WebDriver getDriver(String browser) {
 
         WebDriver driver;
 
-        if(browser.equalsIgnoreCase("chrome")){
+        switch (browser.toLowerCase()) {
 
-            WebDriverManager.chromedriver().setup();
+            case "edge":
 
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless=new");
+                try {
+                    WebDriverManager.edgedriver().setup();
+                    driver = new EdgeDriver();
+                } catch (Exception e) {
 
-            driver = new ChromeDriver(options);
+                    System.out.println("Edge driver download failed, switching to Chrome");
 
-        }
-        else if(browser.equalsIgnoreCase("edge")){
+                    WebDriverManager.chromedriver().setup();
+                    driver = new ChromeDriver();
+                }
 
-            WebDriverManager.edgedriver().setup();
+                break;
 
-            EdgeOptions options = new EdgeOptions();
-            options.addArguments("--headless=new");
+            case "firefox":
 
-            driver = new EdgeDriver(options);
+                WebDriverManager.firefoxdriver().setup();
+                driver = new FirefoxDriver();
+                break;
 
-        }
-        else if(browser.equalsIgnoreCase("firefox")){
+            default:
 
-            WebDriverManager.firefoxdriver().setup();
-
-            FirefoxOptions options = new FirefoxOptions();
-            options.addArguments("--headless");
-
-            driver = new FirefoxDriver(options);
-
-        }
-        else{
-
-            throw new RuntimeException("Browser not supported: " + browser);
-
+                WebDriverManager.chromedriver().setup();
+                driver = new ChromeDriver();
         }
 
         driver.manage().window().maximize();
 
         return driver;
-
     }
 }

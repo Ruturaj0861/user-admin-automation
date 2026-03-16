@@ -1,4 +1,6 @@
-<suite name="User Admin Automation Suite" parallel="tests" thread-count="3">
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="User Admin Automation Framework - Ruturaj Darekar" parallel="tests" thread-count="3">
 
     <test name="Chrome Tests">
         <parameter name="browser" value="chrome"/>

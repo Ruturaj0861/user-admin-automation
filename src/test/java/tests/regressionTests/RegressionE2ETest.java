@@ -2,6 +2,7 @@ package tests.regressionTests;
 
 import base.BaseTest;
 import config.EnvLoader;
+import io.qameta.allure.*;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,9 +13,12 @@ import pages.DashboardPage;
 
 import java.time.Duration;
 
+@Epic("User Admin Automation")
+@Feature("End-to-End Regression")
+@Owner("Ruturaj Darekar")
+
 public class RegressionE2ETest extends BaseTest {
 
-    // Method to safely handle alerts
     public void handleAlert() {
 
         try {
@@ -35,21 +39,17 @@ public class RegressionE2ETest extends BaseTest {
     }
 
     @Test
+    @Description("Verify full end-to-end user flow including register, login, dashboard actions and logout")
+    @Severity(SeverityLevel.BLOCKER)
     public void fullRegressionFlow() throws InterruptedException {
 
-        // Get base URL from .env
         String baseUrl = EnvLoader.get("BASE_URL");
 
         driver.get(baseUrl);
 
-        // Generate dynamic user data
         String name = "User" + System.currentTimeMillis();
         String email = "user" + System.currentTimeMillis() + "@mail.com";
         String password = "Password123";
-
-        // ======================
-        // REGISTER USER
-        // ======================
 
         driver.get(baseUrl + "/register");
 
@@ -60,10 +60,6 @@ public class RegressionE2ETest extends BaseTest {
         handleAlert();
 
         Thread.sleep(2000);
-
-        // ======================
-        // LOGIN USER
-        // ======================
 
         driver.get(baseUrl);
 
@@ -77,17 +73,9 @@ public class RegressionE2ETest extends BaseTest {
 
         DashboardPage dashboard = new DashboardPage(driver);
 
-        // ======================
-        // SEARCH USER
-        // ======================
-
         dashboard.searchUser(name);
 
         Thread.sleep(2000);
-
-        // ======================
-        // UPDATE USER
-        // ======================
 
         dashboard.updateUser();
 
@@ -95,19 +83,11 @@ public class RegressionE2ETest extends BaseTest {
 
         Thread.sleep(2000);
 
-        // ======================
-        // BLOCK USER
-        // ======================
-
         dashboard.blockUser();
 
         handleAlert();
 
         Thread.sleep(2000);
-
-        // ======================
-        // ACTIVATE USER
-        // ======================
 
         dashboard.activateUser();
 
@@ -115,19 +95,11 @@ public class RegressionE2ETest extends BaseTest {
 
         Thread.sleep(2000);
 
-        // ======================
-        // RESET PASSWORD
-        // ======================
-
         dashboard.resetPassword();
 
         handleAlert();
 
         Thread.sleep(2000);
-
-        // ======================
-        // UPLOAD IMAGE
-        // ======================
 
         String filePath = System.getProperty("user.dir")
                 + "\\src\\test\\resources\\testdata\\profile.png";
@@ -138,19 +110,11 @@ public class RegressionE2ETest extends BaseTest {
 
         Thread.sleep(2000);
 
-        // ======================
-        // DELETE USER
-        // ======================
-
         dashboard.deleteUser();
 
         handleAlert();
 
         Thread.sleep(2000);
-
-        // ======================
-        // LOGOUT
-        // ======================
 
         dashboard.logout();
 
