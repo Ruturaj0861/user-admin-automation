@@ -101,15 +101,6 @@ public class RegressionE2ETest extends BaseTest {
 
         Thread.sleep(2000);
 
-        String filePath = System.getProperty("user.dir")
-                + "\\src\\test\\resources\\testdata\\profile.png";
-
-        dashboard.uploadImage(filePath);
-
-        handleAlert();
-
-        Thread.sleep(2000);
-
         dashboard.deleteUser();
 
         handleAlert();

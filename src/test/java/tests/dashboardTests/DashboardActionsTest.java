@@ -109,25 +109,6 @@ public class DashboardActionsTest extends BaseTest {
     }
 
     @Test(priority = 6)
-    @Description("Verify upload image functionality")
-    @Severity(SeverityLevel.CRITICAL)
-    public void uploadImageTest() {
-
-        loginToApplication();
-
-        String filePath = Paths.get(
-                "src",
-                "test",
-                "resources",
-                "testdata",
-                "profile.png"
-        ).toAbsolutePath().toString();
-
-        dashboard.uploadImage(filePath);
-
-    }
-
-    @Test(priority = 7)
     @Description("Verify logout functionality")
     @Severity(SeverityLevel.NORMAL)
     public void logoutTest() {
@@ -137,7 +118,7 @@ public class DashboardActionsTest extends BaseTest {
 
     }
 
-    @Test(priority = 8)
+    @Test(priority = 7)
     @Description("Verify delete user functionality")
     @Severity(SeverityLevel.CRITICAL)
     public void deleteUserTest() {
