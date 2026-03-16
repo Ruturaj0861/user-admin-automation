@@ -25,11 +25,11 @@
             <version>4.21.0</version>
         </dependency>
 
-        <!-- WebDriver Manager -->
+        <!-- WebDriverManager (UPDATED VERSION) -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>5.8.0</version>
+            <version>5.9.2</version>
         </dependency>
 
         <!-- Env Loader -->
@@ -73,9 +73,11 @@
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
 
-                    <!-- Allure results folder -->
+                    <!-- Allure results -->
                     <systemPropertyVariables>
-                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                        <allure.results.directory>
+                            ${project.build.directory}/allure-results
+                        </allure.results.directory>
                     </systemPropertyVariables>
 
                 </configuration>
@@ -87,9 +89,11 @@
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
                 <version>2.12.0</version>
+
                 <configuration>
                     <reportVersion>2.24.0</reportVersion>
                 </configuration>
+
             </plugin>
 
         </plugins>

@@ -12,22 +12,21 @@ public class BaseTest {
     protected WebDriver driver;
 
     @BeforeMethod
-    @Parameters("browser")
+    @Parameters({"browser"})
     public void setup(String browser){
 
         driver = DriverManager.getDriver(browser);
 
         Allure.parameter("Browser", browser);
 
+        driver.manage().window().maximize();
     }
 
     @AfterMethod
     public void tearDown(){
 
         if(driver != null){
-
             driver.quit();
-
         }
 
     }
