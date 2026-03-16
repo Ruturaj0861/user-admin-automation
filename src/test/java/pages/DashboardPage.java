@@ -63,9 +63,7 @@ public class DashboardPage {
     }
 
     public void uploadImage(String filePath) {
-
         driver.findElement(uploadInput).sendKeys(filePath);
-
     }
 
     public void logout() {

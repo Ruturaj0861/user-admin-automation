@@ -116,13 +116,12 @@ public class DashboardActionsTest extends BaseTest {
         loginToApplication();
 
         String filePath = Paths.get(
-                System.getProperty("user.dir"),
                 "src",
                 "test",
                 "resources",
-                "src/test/new/testdata",
+                "testdata",
                 "profile.png"
-        ).toString();
+        ).toAbsolutePath().toString();
 
         dashboard.uploadImage(filePath);
 
